@@ -575,41 +575,21 @@ enum : uint16_t {
 namespace X86 {
 enum RegisterPressureSets {
   SEGMENT_REG = 0,
-  GR32_BPSP = 1,
-  LOW32_ADDR_ACCESS_with_sub_32bit = 2,
-  GR32_BSI = 3,
-  GR32_SIDI = 4,
-  GR32_DIBP_with_GR32_SIDI = 5,
-  GR32_DIBP_with_LOW32_ADDR_ACCESS_with_sub_32bit = 6,
-  RFP32 = 7,
-  GR8_ABCD_H_with_GR32_BSI = 8,
-  GR8_ABCD_L_with_GR32_BSI = 9,
-  VK1 = 10,
-  VR64 = 11,
-  TILE = 12,
-  GR8_NOREX = 13,
-  GR32_TC = 14,
-  GR32_BPSP_with_GR32_TC = 15,
-  FR16 = 16,
-  DEBUG_REG = 17,
-  CONTROL_REG = 18,
-  GR64_NOREX = 19,
-  GR64_TCW64 = 20,
-  GR32_BPSP_with_GR64_TCW64 = 21,
-  GR64_TC_with_GR64_TCW64 = 22,
-  GR64_TC = 23,
-  FR16X = 24,
-  GR64PLTSafe_with_GR64_TC = 25,
-  GR8 = 26,
-  GR8_with_GR32_DIBP = 27,
-  GR8_with_GR32_BSI = 28,
-  GR8_with_LOW32_ADDR_ACCESS_with_sub_32bit = 29,
-  GR8_with_GR64_NOREX = 30,
-  GR8_with_GR64_TCW64 = 31,
-  GR8_with_GR64_TC = 32,
-  GR8_with_GR64PLTSafe = 33,
-  GR8_with_LOW32_ADDR_ACCESS_RBP_with_sub_16bit_in_GR16_NOREX2 = 34,
-  GR16 = 35,
+  RFP32 = 1,
+  VK1 = 2,
+  VR64 = 3,
+  TILE = 4,
+  FR16 = 5,
+  DEBUG_REG = 6,
+  CONTROL_REG = 7,
+  GR8_NOREX = 8,
+  GR64_TC = 9,
+  FR16X = 10,
+  GR64PLTSafe_with_GR64_TC = 11,
+  GR8 = 12,
+  GR8_with_GR64_TC = 13,
+  GR64_TC_with_GR8_with_GR64PLTSafe = 14,
+  GR16 = 15,
 };
 } // end namespace X86
 
@@ -13177,7 +13157,7 @@ getRegUnitWeight(unsigned RegUnit) const {
 
 // Get the number of dimensions of register pressure.
 unsigned X86GenRegisterInfo::getNumRegPressureSets() const {
-  return 36;
+  return 16;
 }
 
 // Get the name of this register unit pressure set.
@@ -13185,40 +13165,20 @@ const char *X86GenRegisterInfo::
 getRegPressureSetName(unsigned Idx) const {
   static const char *PressureNameTable[] = {
     "SEGMENT_REG",
-    "GR32_BPSP",
-    "LOW32_ADDR_ACCESS_with_sub_32bit",
-    "GR32_BSI",
-    "GR32_SIDI",
-    "GR32_DIBP_with_GR32_SIDI",
-    "GR32_DIBP_with_LOW32_ADDR_ACCESS_with_sub_32bit",
     "RFP32",
-    "GR8_ABCD_H_with_GR32_BSI",
-    "GR8_ABCD_L_with_GR32_BSI",
     "VK1",
     "VR64",
     "TILE",
-    "GR8_NOREX",
-    "GR32_TC",
-    "GR32_BPSP_with_GR32_TC",
     "FR16",
     "DEBUG_REG",
     "CONTROL_REG",
-    "GR64_NOREX",
-    "GR64_TCW64",
-    "GR32_BPSP_with_GR64_TCW64",
-    "GR64_TC_with_GR64_TCW64",
+    "GR8_NOREX",
     "GR64_TC",
     "FR16X",
     "GR64PLTSafe_with_GR64_TC",
     "GR8",
-    "GR8_with_GR32_DIBP",
-    "GR8_with_GR32_BSI",
-    "GR8_with_LOW32_ADDR_ACCESS_with_sub_32bit",
-    "GR8_with_GR64_NOREX",
-    "GR8_with_GR64_TCW64",
     "GR8_with_GR64_TC",
-    "GR8_with_GR64PLTSafe",
-    "GR8_with_LOW32_ADDR_ACCESS_RBP_with_sub_16bit_in_GR16_NOREX2",
+    "GR64_TC_with_GR8_with_GR64PLTSafe",
     "GR16",
   };
   return PressureNameTable[Idx];
@@ -13230,41 +13190,21 @@ unsigned X86GenRegisterInfo::
 getRegPressureSetLimit(const MachineFunction &MF, unsigned Idx) const {
   static const uint8_t PressureLimitTable[] = {
     6,  	// 0: SEGMENT_REG
-    6,  	// 1: GR32_BPSP
-    6,  	// 2: LOW32_ADDR_ACCESS_with_sub_32bit
-    6,  	// 3: GR32_BSI
-    6,  	// 4: GR32_SIDI
-    6,  	// 5: GR32_DIBP_with_GR32_SIDI
-    6,  	// 6: GR32_DIBP_with_LOW32_ADDR_ACCESS_with_sub_32bit
-    7,  	// 7: RFP32
-    7,  	// 8: GR8_ABCD_H_with_GR32_BSI
-    7,  	// 9: GR8_ABCD_L_with_GR32_BSI
-    8,  	// 10: VK1
-    8,  	// 11: VR64
-    8,  	// 12: TILE
-    10,  	// 13: GR8_NOREX
-    12,  	// 14: GR32_TC
-    12,  	// 15: GR32_BPSP_with_GR32_TC
-    16,  	// 16: FR16
-    16,  	// 17: DEBUG_REG
-    16,  	// 18: CONTROL_REG
-    18,  	// 19: GR64_NOREX
-    20,  	// 20: GR64_TCW64
-    20,  	// 21: GR32_BPSP_with_GR64_TCW64
-    22,  	// 22: GR64_TC_with_GR64_TCW64
-    26,  	// 23: GR64_TC
-    32,  	// 24: FR16X
-    34,  	// 25: GR64PLTSafe_with_GR64_TC
-    38,  	// 26: GR8
-    38,  	// 27: GR8_with_GR32_DIBP
-    38,  	// 28: GR8_with_GR32_BSI
-    39,  	// 29: GR8_with_LOW32_ADDR_ACCESS_with_sub_32bit
-    42,  	// 30: GR8_with_GR64_NOREX
-    43,  	// 31: GR8_with_GR64_TCW64
-    44,  	// 32: GR8_with_GR64_TC
-    45,  	// 33: GR8_with_GR64PLTSafe
-    48,  	// 34: GR8_with_LOW32_ADDR_ACCESS_RBP_with_sub_16bit_in_GR16_NOREX2
-    66,  	// 35: GR16
+    7,  	// 1: RFP32
+    8,  	// 2: VK1
+    8,  	// 3: VR64
+    8,  	// 4: TILE
+    16,  	// 5: FR16
+    16,  	// 6: DEBUG_REG
+    16,  	// 7: CONTROL_REG
+    18,  	// 8: GR8_NOREX
+    26,  	// 9: GR64_TC
+    32,  	// 10: FR16X
+    34,  	// 11: GR64PLTSafe_with_GR64_TC
+    42,  	// 12: GR8
+    46,  	// 13: GR8_with_GR64_TC
+    50,  	// 14: GR64_TC_with_GR8_with_GR64PLTSafe
+    66,  	// 15: GR16
   };
   return PressureLimitTable[Idx];
 }
@@ -13272,58 +13212,24 @@ getRegPressureSetLimit(const MachineFunction &MF, unsigned Idx) const {
 /// Table of pressure sets per register class or unit.
 static const int RCSetsTable[] = {
   /* 0 */ 0, -1,
-  /* 2 */ 7, -1,
-  /* 4 */ 10, -1,
-  /* 6 */ 11, -1,
-  /* 8 */ 12, -1,
-  /* 10 */ 17, -1,
-  /* 12 */ 18, -1,
-  /* 14 */ 16, 24, -1,
-  /* 17 */ 25, 35, -1,
-  /* 20 */ 19, 23, 25, 30, 35, -1,
-  /* 26 */ 2, 6, 15, 19, 21, 23, 25, 29, 30, 35, -1,
-  /* 37 */ 20, 21, 22, 23, 25, 31, 35, -1,
-  /* 45 */ 22, 23, 25, 32, 35, -1,
-  /* 51 */ 19, 22, 23, 25, 30, 32, 35, -1,
-  /* 59 */ 20, 21, 22, 23, 25, 31, 32, 35, -1,
-  /* 68 */ 14, 15, 19, 20, 21, 22, 23, 25, 30, 31, 32, 35, -1,
-  /* 81 */ 2, 6, 14, 15, 19, 20, 21, 22, 23, 25, 29, 30, 31, 32, 35, -1,
-  /* 97 */ 25, 34, 35, -1,
-  /* 101 */ 19, 23, 25, 30, 34, 35, -1,
-  /* 108 */ 1, 2, 15, 19, 21, 23, 25, 26, 30, 34, 35, -1,
-  /* 120 */ 20, 21, 22, 23, 25, 31, 34, 35, -1,
-  /* 129 */ 22, 23, 25, 32, 34, 35, -1,
-  /* 136 */ 19, 22, 23, 25, 30, 32, 34, 35, -1,
-  /* 145 */ 20, 21, 22, 23, 25, 31, 32, 34, 35, -1,
-  /* 155 */ 1, 2, 14, 15, 19, 20, 21, 22, 23, 25, 26, 30, 31, 32, 34, 35, -1,
-  /* 172 */ 25, 33, 34, 35, -1,
-  /* 177 */ 19, 23, 25, 30, 33, 34, 35, -1,
-  /* 185 */ 1, 5, 6, 19, 23, 25, 27, 30, 33, 34, 35, -1,
-  /* 197 */ 1, 2, 5, 6, 15, 19, 21, 23, 25, 26, 27, 29, 30, 33, 34, 35, -1,
-  /* 214 */ 22, 23, 25, 32, 33, 34, 35, -1,
-  /* 222 */ 3, 4, 8, 9, 13, 19, 23, 25, 28, 30, 32, 33, 34, 35, -1,
-  /* 237 */ 4, 5, 19, 22, 23, 25, 28, 30, 32, 33, 34, 35, -1,
-  /* 250 */ 3, 4, 5, 8, 9, 13, 19, 22, 23, 25, 28, 30, 32, 33, 34, 35, -1,
-  /* 267 */ 1, 4, 5, 6, 19, 22, 23, 25, 27, 28, 30, 32, 33, 34, 35, -1,
-  /* 283 */ 20, 21, 22, 23, 25, 31, 32, 33, 34, 35, -1,
-  /* 294 */ 3, 13, 14, 19, 20, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1,
-  /* 312 */ 8, 13, 14, 19, 20, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1,
-  /* 330 */ 3, 4, 8, 9, 13, 14, 19, 20, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1,
-  /* 351 */ 1, 2, 5, 6, 15, 19, 21, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1,
-  /* 371 */ 1, 4, 5, 6, 19, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1,
-  /* 390 */ 3, 4, 5, 8, 9, 13, 19, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1,
-  /* 411 */ 1, 2, 14, 15, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1,
-  /* 432 */ 3, 13, 14, 15, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1,
-  /* 453 */ 3, 8, 13, 14, 15, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1,
-  /* 475 */ 3, 9, 13, 14, 15, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1,
+  /* 2 */ 1, -1,
+  /* 4 */ 2, -1,
+  /* 6 */ 3, -1,
+  /* 8 */ 4, -1,
+  /* 10 */ 6, -1,
+  /* 12 */ 7, -1,
+  /* 14 */ 5, 10, -1,
+  /* 17 */ 11, 14, 15, -1,
+  /* 21 */ 9, 11, 13, 14, 15, -1,
+  /* 27 */ 8, 9, 11, 12, 13, 14, 15, -1,
 };
 
 /// Get the dimensions of register pressure impacted by this register class.
 /// Returns a -1 terminated array of pressure set IDs
 const int *X86GenRegisterInfo::
 getRegClassPressureSets(const TargetRegisterClass *RC) const {
-  static const uint16_t RCSetStartTable[] = {
-    301,1,300,295,312,333,1,18,97,101,4,4,4,4,4,4,4,4,4,4,0,295,1,15,14,4,4,4,4,4,4,18,18,18,15,18,18,97,10,14,97,97,101,101,4,177,2,4,295,157,433,433,433,108,222,294,433,185,237,26,1,1,330,433,432,197,155,250,267,197,81,2,18,15,18,18,17,12,14,97,97,172,45,20,37,129,129,120,59,101,4,6,214,120,177,51,145,4,145,136,283,239,68,295,157,433,433,120,26,433,108,222,294,185,237,145,81,330,433,432,197,155,250,267,1,2,1,15,14,15,14,15,14,8,};
+  static const uint8_t RCSetStartTable[] = {
+    30,1,29,27,27,27,1,19,17,27,4,4,4,4,4,4,4,4,4,4,0,27,1,15,14,4,4,4,4,4,4,19,19,19,15,19,19,17,10,14,17,17,27,27,4,27,2,4,27,27,27,27,27,27,27,27,27,27,27,27,1,1,27,27,27,27,27,27,27,27,27,2,19,15,19,19,17,12,14,17,17,17,21,27,21,21,21,21,21,27,4,6,21,21,27,27,21,4,21,27,21,27,27,27,27,27,27,21,27,27,27,27,27,27,27,21,27,27,27,27,27,27,27,27,1,2,1,15,14,15,14,15,14,8,};
   return &RCSetsTable[RCSetStartTable[RC->getID()]];
 }
 
@@ -13332,8 +13238,8 @@ getRegClassPressureSets(const TargetRegisterClass *RC) const {
 const int *X86GenRegisterInfo::
 getRegUnitPressureSets(unsigned RegUnit) const {
   assert(RegUnit < 221 && "invalid register unit");
-  static const uint16_t RUSetStartTable[] = {
-    454,476,330,330,351,1,453,475,0,1,454,371,1,476,0,1,1,1,1,1,1,1,81,1,1,0,390,1,1,411,1,1,1,1,0,1,0,1,1,1,1,0,1,1,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,2,2,2,2,2,2,2,1,6,6,6,6,6,6,6,6,416,1,1,416,1,1,416,1,1,416,1,1,300,1,1,300,1,1,300,1,1,300,1,1,1,1,1,1,1,1,1,1,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,4,4,4,4,4,4,4,4,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,1,8,8,8,8,8,8,8,8,301,1,1,301,1,1,301,1,1,301,1,1,301,1,1,301,1,1,301,1,1,301,1,1,301,1,1,301,1,1,301,1,1,301,1,1,301,1,1,301,1,1,301,1,1,301,1,1,};
+  static const uint8_t RUSetStartTable[] = {
+    27,27,27,27,27,1,27,27,0,1,27,27,1,27,0,1,1,1,1,1,1,1,27,1,1,0,27,1,1,27,1,1,1,1,0,1,0,1,1,1,1,0,1,1,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,2,2,2,2,2,2,2,1,6,6,6,6,6,6,6,6,28,1,1,28,1,1,28,1,1,28,1,1,29,1,1,29,1,1,29,1,1,29,1,1,1,1,1,1,1,1,1,1,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,4,4,4,4,4,4,4,4,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,1,8,8,8,8,8,8,8,8,30,1,1,30,1,1,30,1,1,30,1,1,30,1,1,30,1,1,30,1,1,30,1,1,30,1,1,30,1,1,30,1,1,30,1,1,30,1,1,30,1,1,30,1,1,30,1,1,};
   return &RCSetsTable[RUSetStartTable[RegUnit]];
 }
 

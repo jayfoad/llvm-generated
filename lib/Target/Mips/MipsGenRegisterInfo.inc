@@ -577,14 +577,12 @@ enum RegisterPressureSets {
   GPRMM16MoveP = 9,
   ACC64DSP = 10,
   CPU16Regs = 11,
-  GPRMM16Zero_with_GPRMM16MovePPairSecond = 12,
-  CPU16Regs_with_GPRMM16MovePPairSecond = 13,
-  CPU16Regs_with_GPRMM16MoveP = 14,
-  DSPR = 15,
-  FGR32 = 16,
-  MSA128WEvens = 17,
-  FGR32_with_MSA128WEvens = 18,
-  MSA128F16 = 19,
+  CPU16Regs_with_GPRMM16MoveP = 12,
+  DSPR = 13,
+  FGR32 = 14,
+  MSA128WEvens = 15,
+  FGR32_with_MSA128WEvens = 16,
+  MSA128F16 = 17,
 };
 } // end namespace Mips
 
@@ -7886,7 +7884,7 @@ getRegUnitWeight(unsigned RegUnit) const {
 
 // Get the number of dimensions of register pressure.
 unsigned MipsGenRegisterInfo::getNumRegPressureSets() const {
-  return 20;
+  return 18;
 }
 
 // Get the name of this register unit pressure set.
@@ -7905,8 +7903,6 @@ getRegPressureSetName(unsigned Idx) const {
     "GPRMM16MoveP",
     "ACC64DSP",
     "CPU16Regs",
-    "GPRMM16Zero_with_GPRMM16MovePPairSecond",
-    "CPU16Regs_with_GPRMM16MovePPairSecond",
     "CPU16Regs_with_GPRMM16MoveP",
     "DSPR",
     "FGR32",
@@ -7933,15 +7929,13 @@ getRegPressureSetLimit(const MachineFunction &MF, unsigned Idx) const {
     6,  	// 8: GPRMM16MovePPairSecond
     8,  	// 9: GPRMM16MoveP
     8,  	// 10: ACC64DSP
-    10,  	// 11: CPU16Regs
-    10,  	// 12: GPRMM16Zero_with_GPRMM16MovePPairSecond
-    11,  	// 13: CPU16Regs_with_GPRMM16MovePPairSecond
-    13,  	// 14: CPU16Regs_with_GPRMM16MoveP
-    32,  	// 15: DSPR
-    32,  	// 16: FGR32
-    32,  	// 17: MSA128WEvens
-    48,  	// 18: FGR32_with_MSA128WEvens
-    64,  	// 19: MSA128F16
+    12,  	// 11: CPU16Regs
+    15,  	// 12: CPU16Regs_with_GPRMM16MoveP
+    32,  	// 13: DSPR
+    32,  	// 14: FGR32
+    32,  	// 15: MSA128WEvens
+    48,  	// 16: FGR32_with_MSA128WEvens
+    64,  	// 17: MSA128F16
   };
   return PressureLimitTable[Idx];
 }
@@ -7951,15 +7945,12 @@ static const int RCSetsTable[] = {
   /* 0 */ 0, -1,
   /* 2 */ 6, 10, -1,
   /* 5 */ 3, 6, 7, 10, -1,
-  /* 10 */ 2, 15, -1,
-  /* 13 */ 8, 12, 13, 15, -1,
-  /* 18 */ 9, 14, 15, -1,
-  /* 22 */ 1, 5, 9, 11, 12, 14, 15, -1,
-  /* 30 */ 5, 9, 11, 13, 14, 15, -1,
-  /* 37 */ 4, 8, 11, 12, 13, 14, 15, -1,
-  /* 45 */ 5, 9, 11, 12, 13, 14, 15, -1,
-  /* 53 */ 16, 18, 19, -1,
-  /* 57 */ 16, 17, 18, 19, -1,
+  /* 10 */ 2, 13, -1,
+  /* 13 */ 9, 12, 13, -1,
+  /* 17 */ 4, 8, 11, 12, 13, -1,
+  /* 23 */ 1, 5, 9, 11, 12, 13, -1,
+  /* 30 */ 14, 16, 17, -1,
+  /* 34 */ 14, 15, 16, 17, -1,
 };
 
 /// Get the dimensions of register pressure impacted by this register class.
@@ -7967,7 +7958,7 @@ static const int RCSetsTable[] = {
 const int *MipsGenRegisterInfo::
 getRegClassPressureSets(const TargetRegisterClass *RC) const {
   static const uint8_t RCSetStartTable[] = {
-    55,1,1,1,1,11,53,53,11,1,1,11,32,32,1,32,18,25,39,18,13,30,23,2,7,38,37,45,37,1,1,0,1,22,5,5,1,55,11,11,53,32,32,18,25,39,18,13,3,30,23,38,37,45,1,1,37,5,1,10,22,5,5,1,55,55,55,55,58,5,};
+    32,1,1,1,1,11,30,30,11,1,1,11,19,19,1,19,13,19,19,13,18,24,24,2,7,18,17,24,17,1,1,0,1,23,5,5,1,32,11,11,30,19,19,13,19,19,13,18,3,24,24,18,17,24,1,1,17,5,1,10,23,5,5,1,32,32,32,32,35,5,};
   return &RCSetsTable[RCSetStartTable[RC->getID()]];
 }
 
@@ -7977,7 +7968,7 @@ const int *MipsGenRegisterInfo::
 getRegUnitPressureSets(unsigned RegUnit) const {
   assert(RegUnit < 321 && "invalid register unit");
   static const uint8_t RUSetStartTable[] = {
-    11,0,1,1,1,1,1,1,1,1,1,11,11,1,1,1,1,1,1,1,1,1,10,32,22,37,37,37,38,5,5,7,2,7,2,7,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,57,53,57,53,57,53,57,53,57,53,57,53,57,53,57,53,57,53,57,53,57,53,57,53,57,53,57,53,57,53,57,53,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,58,55,58,55,58,55,58,55,58,55,58,55,58,55,58,55,58,55,58,55,58,55,58,55,58,55,58,55,58,55,58,55,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,11,11,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,30,45,18,18,18,13,13,11,11,11,11,11,11,11,11,11,11,11,45,45,};
+    11,0,1,1,1,1,1,1,1,1,1,11,11,1,1,1,1,1,1,1,1,1,10,19,23,17,17,17,18,5,5,7,2,7,2,7,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,34,30,34,30,34,30,34,30,34,30,34,30,34,30,34,30,34,30,34,30,34,30,34,30,34,30,34,30,34,30,34,30,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,35,32,35,32,35,32,35,32,35,32,35,32,35,32,35,32,35,32,35,32,35,32,35,32,35,32,35,32,35,32,35,32,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,11,11,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,24,24,13,13,13,18,18,11,11,11,11,11,11,11,11,11,11,11,24,24,};
   return &RCSetsTable[RUSetStartTable[RegUnit]];
 }
 

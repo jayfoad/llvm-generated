@@ -551,30 +551,23 @@ enum RegisterPressureSets {
   tcGPR = 7,
   hGPR = 8,
   tGPROdd_with_tcGPR = 9,
-  tGPR = 10,
-  tGPR_with_tcGPR = 11,
-  tGPREven = 12,
-  hGPR_with_tGPREven = 13,
-  hGPR_with_tGPROdd = 14,
-  hGPR_with_tcGPR = 15,
-  tGPR_with_tGPREven = 16,
-  GPR = 17,
-  GPRwithZR = 18,
-  GPRwithAPSR_with_GPRwithZR = 19,
-  DQuad_with_dsub_0_in_DPR_8 = 20,
-  DQuad_with_ssub_2_ssub_3_ssub_4_ssub_5_in_MQPR = 21,
-  HPR = 22,
-  DTriple_with_ssub_0_and_DTriple_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR = 23,
-  DPair_with_ssub_0 = 24,
-  DQuad_with_ssub_0_and_DQuad_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR = 25,
-  DPairSpc_with_ssub_0 = 26,
-  DQuad_with_ssub_0 = 27,
-  DTripleSpc_with_ssub_0 = 28,
-  QQQQPR_with_ssub_0 = 29,
-  DQuad_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR = 30,
-  DTriple_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR = 31,
-  DTriple_with_qsub_0_in_QPR = 32,
-  DPR = 33,
+  tGPREven = 10,
+  tGPR = 11,
+  GPR = 12,
+  DQuad_with_dsub_0_in_DPR_8 = 13,
+  DQuad_with_ssub_2_ssub_3_ssub_4_ssub_5_in_MQPR = 14,
+  HPR = 15,
+  DTriple_with_ssub_0_and_DTriple_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR = 16,
+  DPair_with_ssub_0 = 17,
+  DQuad_with_ssub_0_and_DQuad_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR = 18,
+  DPairSpc_with_ssub_0 = 19,
+  DQuad_with_ssub_0 = 20,
+  DTripleSpc_with_ssub_0 = 21,
+  QQQQPR_with_ssub_0 = 22,
+  DQuad_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR = 23,
+  DTriple_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR = 24,
+  DTriple_with_qsub_0_in_QPR = 25,
+  DPR = 26,
 };
 } // end namespace ARM
 
@@ -25203,7 +25196,7 @@ getRegUnitWeight(unsigned RegUnit) const {
 
 // Get the number of dimensions of register pressure.
 unsigned ARMGenRegisterInfo::getNumRegPressureSets() const {
-  return 34;
+  return 27;
 }
 
 // Get the name of this register unit pressure set.
@@ -25220,16 +25213,9 @@ getRegPressureSetName(unsigned Idx) const {
     "tcGPR",
     "hGPR",
     "tGPROdd_with_tcGPR",
-    "tGPR",
-    "tGPR_with_tcGPR",
     "tGPREven",
-    "hGPR_with_tGPREven",
-    "hGPR_with_tGPROdd",
-    "hGPR_with_tcGPR",
-    "tGPR_with_tGPREven",
+    "tGPR",
     "GPR",
-    "GPRwithZR",
-    "GPRwithAPSR_with_GPRwithZR",
     "DQuad_with_dsub_0_in_DPR_8",
     "DQuad_with_ssub_2_ssub_3_ssub_4_ssub_5_in_MQPR",
     "HPR",
@@ -25263,30 +25249,23 @@ getRegPressureSetLimit(const MachineFunction &MF, unsigned Idx) const {
     6,  	// 7: tcGPR
     8,  	// 8: hGPR
     10,  	// 9: tGPROdd_with_tcGPR
-    11,  	// 10: tGPR
-    11,  	// 11: tGPR_with_tcGPR
-    11,  	// 12: tGPREven
-    12,  	// 13: hGPR_with_tGPREven
-    12,  	// 14: hGPR_with_tGPROdd
-    12,  	// 15: hGPR_with_tcGPR
-    13,  	// 16: tGPR_with_tGPREven
-    17,  	// 17: GPR
-    17,  	// 18: GPRwithZR
-    17,  	// 19: GPRwithAPSR_with_GPRwithZR
-    24,  	// 20: DQuad_with_dsub_0_in_DPR_8
-    32,  	// 21: DQuad_with_ssub_2_ssub_3_ssub_4_ssub_5_in_MQPR
-    32,  	// 22: HPR
-    34,  	// 23: DTriple_with_ssub_0_and_DTriple_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR
-    34,  	// 24: DPair_with_ssub_0
-    36,  	// 25: DQuad_with_ssub_0_and_DQuad_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR
-    36,  	// 26: DPairSpc_with_ssub_0
-    38,  	// 27: DQuad_with_ssub_0
-    40,  	// 28: DTripleSpc_with_ssub_0
-    44,  	// 29: QQQQPR_with_ssub_0
-    60,  	// 30: DQuad_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR
-    62,  	// 31: DTriple_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR
-    62,  	// 32: DTriple_with_qsub_0_in_QPR
-    64,  	// 33: DPR
+    11,  	// 10: tGPREven
+    13,  	// 11: tGPR
+    18,  	// 12: GPR
+    24,  	// 13: DQuad_with_dsub_0_in_DPR_8
+    32,  	// 14: DQuad_with_ssub_2_ssub_3_ssub_4_ssub_5_in_MQPR
+    32,  	// 15: HPR
+    34,  	// 16: DTriple_with_ssub_0_and_DTriple_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR
+    34,  	// 17: DPair_with_ssub_0
+    36,  	// 18: DQuad_with_ssub_0_and_DQuad_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR
+    36,  	// 19: DPairSpc_with_ssub_0
+    38,  	// 20: DQuad_with_ssub_0
+    40,  	// 21: DTripleSpc_with_ssub_0
+    44,  	// 22: QQQQPR_with_ssub_0
+    60,  	// 23: DQuad_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR
+    62,  	// 24: DTriple_with_ssub_2_ssub_3_ssub_4_ssub_5_in_QPR
+    62,  	// 25: DTriple_with_qsub_0_in_QPR
+    64,  	// 26: DPR
   };
   return PressureLimitTable[Idx];
 }
@@ -25296,31 +25275,19 @@ static const int RCSetsTable[] = {
   /* 0 */ 0, -1,
   /* 2 */ 2, -1,
   /* 4 */ 3, -1,
-  /* 6 */ 8, 13, 14, 15, 17, 18, -1,
-  /* 13 */ 10, 11, 16, 17, 18, -1,
-  /* 19 */ 4, 8, 10, 11, 13, 14, 15, 16, 17, 18, -1,
-  /* 30 */ 17, 19, -1,
-  /* 33 */ 6, 9, 10, 14, 17, 18, 19, -1,
-  /* 41 */ 7, 9, 11, 12, 15, 17, 18, 19, -1,
-  /* 50 */ 8, 13, 14, 15, 17, 18, 19, -1,
-  /* 58 */ 6, 8, 9, 10, 13, 14, 15, 17, 18, 19, -1,
-  /* 69 */ 5, 7, 8, 9, 11, 12, 13, 14, 15, 17, 18, 19, -1,
-  /* 82 */ 10, 11, 16, 17, 18, 19, -1,
-  /* 89 */ 10, 11, 12, 13, 16, 17, 18, 19, -1,
-  /* 98 */ 6, 9, 10, 11, 14, 16, 17, 18, 19, -1,
-  /* 108 */ 7, 9, 11, 12, 15, 16, 17, 18, 19, -1,
-  /* 118 */ 7, 9, 10, 11, 12, 15, 16, 17, 18, 19, -1,
-  /* 129 */ 7, 9, 11, 12, 13, 15, 16, 17, 18, 19, -1,
-  /* 140 */ 7, 9, 10, 11, 12, 13, 15, 16, 17, 18, 19, -1,
-  /* 152 */ 6, 7, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, -1,
-  /* 165 */ 1, 8, 12, 13, 14, 15, 16, 17, 18, 19, -1,
-  /* 176 */ 5, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, -1,
-  /* 190 */ 31, 33, -1,
-  /* 193 */ 20, 22, 24, 26, 27, 28, 29, 32, 33, -1,
-  /* 203 */ 25, 27, 28, 29, 30, 31, 32, 33, -1,
-  /* 212 */ 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, -1,
-  /* 223 */ 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, -1,
-  /* 236 */ 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, -1,
+  /* 6 */ 8, 12, -1,
+  /* 9 */ 1, 8, 10, 12, -1,
+  /* 14 */ 4, 8, 11, 12, -1,
+  /* 19 */ 6, 9, 11, 12, -1,
+  /* 24 */ 6, 8, 9, 11, 12, -1,
+  /* 30 */ 6, 7, 9, 10, 11, 12, -1,
+  /* 37 */ 5, 7, 8, 9, 10, 11, 12, -1,
+  /* 45 */ 24, 26, -1,
+  /* 48 */ 13, 15, 17, 19, 20, 21, 22, 25, 26, -1,
+  /* 58 */ 18, 20, 21, 22, 23, 24, 25, 26, -1,
+  /* 67 */ 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, -1,
+  /* 78 */ 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, -1,
+  /* 91 */ 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, -1,
 };
 
 /// Get the dimensions of register pressure impacted by this register class.
@@ -25328,7 +25295,7 @@ static const int RCSetsTable[] = {
 const int *ARMGenRegisterInfo::
 getRegClassPressureSets(const TargetRegisterClass *RC) const {
   static const uint8_t RCSetStartTable[] = {
-    194,1,194,1,10,30,38,193,37,10,1,1,38,10,37,37,10,37,13,1,6,82,91,50,6,6,91,50,33,50,6,108,50,166,89,98,118,129,166,58,140,152,1,0,165,69,2,4,19,176,191,194,193,37,37,82,50,41,118,50,69,191,196,194,193,193,191,195,191,194,193,194,194,193,193,191,191,198,196,200,195,190,196,194,194,193,193,195,212,193,237,194,193,193,193,236,193,193,236,191,198,196,194,193,193,193,191,197,196,191,207,195,194,193,196,203,193,223,194,193,237,193,236,193,193,236,236,191,199,198,196,194,194,193,193,193,};
+    49,1,49,1,7,7,7,48,7,7,1,1,7,7,7,7,7,7,16,1,6,16,11,6,6,6,11,6,19,6,6,31,6,10,33,19,31,31,10,24,31,30,1,0,9,37,2,4,14,37,46,49,48,7,7,16,6,31,31,6,37,46,51,49,48,48,46,50,46,49,48,49,49,48,48,46,46,53,51,55,50,45,51,49,49,48,48,50,67,48,92,49,48,48,48,91,48,48,91,46,53,51,49,48,48,48,46,52,51,46,62,50,49,48,51,58,48,78,49,48,92,48,91,48,48,91,91,46,54,53,51,49,49,48,48,48,};
   return &RCSetsTable[RCSetStartTable[RC->getID()]];
 }
 
@@ -25338,7 +25305,7 @@ const int *ARMGenRegisterInfo::
 getRegUnitPressureSets(unsigned RegUnit) const {
   assert(RegUnit < 84 && "invalid register unit");
   static const uint8_t RUSetStartTable[] = {
-    1,30,1,0,1,1,1,4,1,1,1,165,19,1,69,1,2,38,193,193,236,236,236,236,236,236,236,236,236,236,236,236,236,236,236,236,236,236,236,236,236,236,237,237,237,237,237,237,237,237,223,212,203,205,206,206,207,207,207,207,207,207,207,207,207,190,1,1,1,1,1,140,152,140,152,89,98,89,98,166,58,166,58,176,};
+    1,7,1,0,1,1,1,4,1,1,1,9,14,1,37,1,2,7,48,48,91,91,91,91,91,91,91,91,91,91,91,91,91,91,91,91,91,91,91,91,91,91,92,92,92,92,92,92,92,92,78,67,58,60,61,61,62,62,62,62,62,62,62,62,62,45,1,1,1,1,1,31,30,31,30,33,19,33,19,10,24,10,24,37,};
   return &RCSetsTable[RUSetStartTable[RegUnit]];
 }
 

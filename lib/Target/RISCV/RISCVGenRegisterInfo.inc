@@ -656,10 +656,11 @@ enum RegisterPressureSets {
   VMV0 = 7,
   GPRC_with_SR07 = 8,
   GPRTC = 9,
-  VRM8NoV0 = 10,
-  FPR16 = 11,
-  VM = 12,
-  GPR = 13,
+  SR07_with_GPRTC_with_GPRC = 10,
+  VRM8NoV0 = 11,
+  FPR16 = 12,
+  VM = 13,
+  GPR = 14,
 };
 } // end namespace RISCV
 
@@ -15522,7 +15523,7 @@ getRegUnitWeight(unsigned RegUnit) const {
 
 // Get the number of dimensions of register pressure.
 unsigned RISCVGenRegisterInfo::getNumRegPressureSets() const {
-  return 14;
+  return 15;
 }
 
 // Get the name of this register unit pressure set.
@@ -15539,6 +15540,7 @@ getRegPressureSetName(unsigned Idx) const {
     "VMV0",
     "GPRC_with_SR07",
     "GPRTC",
+    "SR07_with_GPRTC_with_GPRC",
     "VRM8NoV0",
     "FPR16",
     "VM",
@@ -15562,25 +15564,26 @@ getRegPressureSetLimit(const MachineFunction &MF, unsigned Idx) const {
     8,  	// 7: VMV0
     14,  	// 8: GPRC_with_SR07
     16,  	// 9: GPRTC
-    24,  	// 10: VRM8NoV0
-    32,  	// 11: FPR16
-    32,  	// 12: VM
-    33,  	// 13: GPR
+    22,  	// 10: SR07_with_GPRTC_with_GPRC
+    24,  	// 11: VRM8NoV0
+    32,  	// 12: FPR16
+    32,  	// 13: VM
+    33,  	// 14: GPR
   };
   return PressureLimitTable[Idx];
 }
 
 /// Table of pressure sets per register class or unit.
 static const int RCSetsTable[] = {
-  /* 0 */ 4, 11, -1,
-  /* 3 */ 7, 12, -1,
-  /* 6 */ 10, 12, -1,
-  /* 9 */ 1, 13, -1,
-  /* 12 */ 2, 13, -1,
-  /* 15 */ 3, 13, -1,
-  /* 18 */ 6, 8, 13, -1,
-  /* 22 */ 5, 8, 9, 13, -1,
-  /* 27 */ 0, 5, 6, 8, 9, 13, -1,
+  /* 0 */ 4, 12, -1,
+  /* 3 */ 7, 13, -1,
+  /* 6 */ 11, 13, -1,
+  /* 9 */ 1, 14, -1,
+  /* 12 */ 2, 14, -1,
+  /* 15 */ 3, 14, -1,
+  /* 18 */ 6, 8, 10, 14, -1,
+  /* 23 */ 5, 8, 9, 10, 14, -1,
+  /* 29 */ 0, 5, 6, 8, 9, 10, 14, -1,
 };
 
 /// Get the dimensions of register pressure impacted by this register class.
@@ -15588,7 +15591,7 @@ static const int RCSetsTable[] = {
 const int *RISCVGenRegisterInfo::
 getRegClassPressureSets(const TargetRegisterClass *RC) const {
   static const uint8_t RCSetStartTable[] = {
-    1,10,1,10,10,10,10,10,10,24,0,22,18,22,2,27,15,9,15,15,12,10,10,10,10,24,22,18,22,27,9,12,15,1,4,4,4,0,3,4,4,4,4,3,3,4,4,3,4,4,4,4,4,4,3,3,3,4,4,3,4,4,4,4,3,3,4,4,3,4,4,4,4,4,4,4,6,3,3,3,3,};
+    1,10,1,10,10,10,10,10,10,25,0,23,18,23,2,29,15,9,15,15,12,10,10,10,10,25,23,18,23,29,9,12,15,1,4,4,4,0,3,4,4,4,4,3,3,4,4,3,4,4,4,4,4,4,3,3,3,4,4,3,4,4,4,4,3,3,4,4,3,4,4,4,4,4,4,4,6,3,3,3,3,};
   return &RCSetsTable[RCSetStartTable[RC->getID()]];
 }
 
@@ -15598,7 +15601,7 @@ const int *RISCVGenRegisterInfo::
 getRegUnitPressureSets(unsigned RegUnit) const {
   assert(RegUnit < 106 && "invalid register unit");
   static const uint8_t RUSetStartTable[] = {
-    2,2,2,2,2,2,2,2,2,9,3,3,3,3,3,3,3,3,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,9,15,12,12,15,15,24,24,27,27,22,22,22,22,22,22,24,24,18,18,18,18,18,18,10,10,10,10,24,24,24,24,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,};
+    2,2,2,2,2,2,2,2,2,9,3,3,3,3,3,3,3,3,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,9,15,12,12,15,15,25,25,29,29,23,23,23,23,23,23,25,25,18,18,18,18,18,18,10,10,10,10,25,25,25,25,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,};
   return &RCSetsTable[RUSetStartTable[RegUnit]];
 }
 
